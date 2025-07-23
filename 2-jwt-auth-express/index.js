@@ -4,13 +4,9 @@ const app = express();
 
 // require('dotenv').config();
 // const SECRET = process.env.SECRET;
+
 const PORT = 3001;
-
-
 const SECRET = 'secret123';
-
-
-
 app.use(express.json());
 
 const user = {
