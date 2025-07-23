@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+function sendMessageJson(msg) {
+    return { message: msg };
+}
 let currentId = 5;
 const products = [
     {
