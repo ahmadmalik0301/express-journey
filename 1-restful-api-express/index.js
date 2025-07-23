@@ -38,12 +38,12 @@ app.get(`/`, (req, res) => {
 
 app.use('/products',productsRouter);
 
-// 404 - Not Found (for any unmatched route)
+
 app.use((req, res, next) => {
     res.status(404).json(sendMessageJson("404 - Page Not Found"));
 });
 
-// 500 - Internal Server Error (generic error handler)
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json(sendMessageJson("Internal Server Error"));
