@@ -2,11 +2,11 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const app = express();
 
-// require('dotenv').config();
-// const SECRET = process.env.SECRET;
-// console.log(SECRET);
-const PORT = 3001;
-const SECRET = "secret123";
+require('dotenv').config();
+
+const PORT = process.env.PORT;
+const SECRET = process.env.SECRET;
+console.log(SECRET);
 app.use(express.json());
 
 const user = {
