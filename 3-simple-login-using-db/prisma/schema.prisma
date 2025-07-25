@@ -11,7 +11,7 @@ datasource db {
 model users_test {
   id        Int     @id @default(autoincrement())
   username String? @db.VarChar(10)
-  password  String? @db.VarChar(10)
+  password  String? @db.VarChar(100)
   age       Int?
   name      String? @db.VarChar(20)
 }

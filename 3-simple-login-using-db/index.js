@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const prisma = require("./db");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const SECRET = process.env.SECRET;
@@ -24,7 +25,9 @@ async function login(req, res, next) {
     const user = await prisma.users_test.findFirst({
       where: { username },
     });
-    if (user.password === password) {
+    const isMatch = bcrypt.compare(password, user.password);
+
+    if (isMatch) {
       return next();
     } else {
       return res.status(401).json({ message: "Wrong password" });
@@ -49,10 +52,17 @@ async function createUser(req, res, next) {
     if (exist) {
       return res.status(409).json({ message: "This user already exists" });
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await prisma.users_test.create({
-      data: { username, password, age, name },
+      data: {
+        username,
+        password: hashedPassword,
+        age,
+        name,
+      },
     });
+
     next();
   } catch (err) {
     next(err);
@@ -71,7 +81,7 @@ function verifyToken(req, res, next) {
     console.log(user.name);
     next();
   } catch (err) {
-    return res.status(400).json({ message: "Your token is invalid." });
+    return res.status(401).json({ message: "Your token is invalid." });
   }
 }
 
@@ -88,7 +98,7 @@ app.post("/signup", createUser, (req, res) => {
 });
 app.post("/login", login, (req, res) => {
   const { username, password } = req.body;
-  const token = jwt.sign(username, SECRET);
+  const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
   res.status(200).json({ message: "Welcome You are Logged in", token });
 });
 
@@ -107,6 +117,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something Went wrong in the Server" });
 });
 
-app.listen(8080, () => {
-  console.log("Server running on port 8080");
+app.listen(8080, "0.0.0.0", () => {
+  console.log("Server running on http://10.200.10.9:8080");
 });
