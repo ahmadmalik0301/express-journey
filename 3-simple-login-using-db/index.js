@@ -3,9 +3,26 @@ const app = express();
 const prisma = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 require("dotenv").config();
 
 const SECRET = process.env.SECRET;
+const joi = require("joi");
+
+const signUpScheme = joi.object({
+  username: joi
+    .string()
+    .pattern(/^[a-zA-Z0-9._-]+$/)
+    .min(3)
+    .max(10)
+    .required(),
+
+  password: joi.string().min(3).max(10).required(),
+
+  age: joi.number().integer().min(12).required(),
+
+  name: joi.string().min(1).max(100).required(),
+});
 
 app.use(express.json());
 
@@ -38,14 +55,11 @@ async function login(req, res, next) {
 }
 
 async function createUser(req, res, next) {
+  const { error } = signUpScheme.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
   const { username, password, age, name } = req.body;
-
-  if (!username)
-    return res.status(400).json({ message: "Username is missing" });
-  if (!password)
-    return res.status(400).json({ message: "Password is missing" });
-  if (!age) return res.status(400).json({ message: "Age is missing" });
-  if (!name) return res.status(400).json({ message: "Name is missing" });
 
   try {
     const exist = await userExist(username);
