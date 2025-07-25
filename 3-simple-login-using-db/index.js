@@ -25,7 +25,7 @@ async function login(req, res, next) {
     const user = await prisma.users_test.findFirst({
       where: { username },
     });
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
       return next();
