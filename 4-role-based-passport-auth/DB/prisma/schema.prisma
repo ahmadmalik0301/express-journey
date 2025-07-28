@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model products {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(150)
+  price       Decimal?  @db.Decimal(10, 2)
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model users {
+  id       Int        @id @default(autoincrement())
+  email    String     @unique @db.VarChar(100)
+  password String     @db.VarChar(255) // 👈 added this line
+  name     String?    @db.VarChar(100)
+  age      Int?
+  role     role_enum? @default(user)
+}
+
+
+enum role_enum {
+  admin
+  user
+}
