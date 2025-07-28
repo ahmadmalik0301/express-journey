@@ -1,10 +1,11 @@
-const express = require("express");
-const app = express();
-
-const passport = require("passport");
-const passportJWT = require("./middlewares/passport-jwt.js");
+// Load environment variables
 require("dotenv").config();
 
+const express = require("express");
+const passport = require("passport");
+const app = express();
+
+const passportJWT = require("./middlewares/passport-jwt.js");
 const signUpRouter = require("./routers/signup.js");
 const loginRouter = require("./routers/login.js");
 const productRouter = require("./routers/products.js");
@@ -23,12 +24,10 @@ app.use(
   productRouter
 );
 
-// passport.authenticate("jwt", { session: false })
-
-app.listen(3000, () => {
-  console.log("http://localhost:3000");
-});
-
 app.use((req, res) => {
   res.status(404).json({ message: "Page not found" });
+});
+
+app.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
 });
