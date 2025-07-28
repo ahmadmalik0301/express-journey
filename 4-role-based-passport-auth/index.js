@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
+
 const passport = require("passport");
+const passportJWT = require("./middlewares/passport-jwt.js");
 require("dotenv").config();
 
 const signUpRouter = require("./routers/signup.js");
 const loginRouter = require("./routers/login.js");
-const passportJWT = require("./middlewares/passport-jwt.js");
 const productRouter = require("./routers/products.js");
 
 passportJWT(passport);
