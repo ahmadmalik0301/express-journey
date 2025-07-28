@@ -6,3 +6,5 @@ This is my repository where I will add my Express progress
 2- Simple Authentication using JWT
 <br>
 3- Protected routes that are accessible only with valid username and password using JWT tokens afer validation from actual Database
+<br>
+4- Added Role based Authentication letting only admin to delete ,put,patch products
