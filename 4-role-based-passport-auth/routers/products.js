@@ -40,7 +40,7 @@ router.patch("/:id", isAdmin, async (req, res) => {
       where: { id },
       data: value,
     });
-    res.json({ message: "Product updated", updatedProduct });
+    res.status(201).json({ message: "Product updated", updatedProduct });
   } catch (err) {
     res.status(500).json({ message: "Error updating product" });
   }
@@ -62,7 +62,7 @@ router.delete("/:id", isAdmin, async (req, res) => {
   const id = parseInt(req.params.id);
   try {
     await prisma.products.delete({ where: { id } });
-    res.json({ message: "Product deleted" });
+    res.status(200).json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ message: "Error deleting product" });
   }
