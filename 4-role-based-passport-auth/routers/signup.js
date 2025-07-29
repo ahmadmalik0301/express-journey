@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
 
     const existingUser = await prisma.users.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
+      return res.status(409).json({ message: "Email already in use" });
     }
 
     let role = "user";
