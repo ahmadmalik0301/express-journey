@@ -12,6 +12,7 @@ const isAdmin = (req, res, next) => {
 };
 
 router.get("/", async (req, res) => {
+  console.log(req.user);
   try {
     const products = await prisma.products.findMany();
     res.json(products);
