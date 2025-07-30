@@ -170,6 +170,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -178,8 +179,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel products {\n  id          Int       @id @default(autoincrement())\n  title       String    @db.VarChar(150)\n  price       Decimal?  @db.Decimal(10, 2)\n  description String?\n  created_at  DateTime? @default(now()) @db.Timestamp(6)\n}\n\nmodel users {\n  id       Int        @id @default(autoincrement())\n  email    String     @unique @db.VarChar(100)\n  password String     @db.VarChar(255) // 👈 added this line\n  name     String?    @db.VarChar(100)\n  age      Int?\n  role     role_enum? @default(user)\n}\n\nenum role_enum {\n  admin\n  user\n}\n",
-  "inlineSchemaHash": "8ed6ab41618090b45346741c9adc7c4a267083fa0ca943c08f397edf52e086e6",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel products {\n  id          Int       @id @default(autoincrement())\n  title       String    @db.VarChar(150)\n  price       Decimal?  @db.Decimal(10, 2)\n  description String?\n  created_at  DateTime? @default(now()) @db.Timestamp(6)\n}\n\nmodel users {\n  id       Int        @id @default(autoincrement())\n  email    String     @unique @db.VarChar(100)\n  password String     @db.VarChar(255)\n  name     String?    @db.VarChar(100)\n  age      Int?\n  role     role_enum? @default(user)\n}\n\nenum role_enum {\n  admin\n  user\n}\n",
+  "inlineSchemaHash": "d11d04eb3028f6884829ff76145073bf891863c937bfa94de1fcff2af173230c",
   "copyEngine": true
 }
 config.dirname = '/'
