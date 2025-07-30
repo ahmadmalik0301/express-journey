@@ -19,7 +19,7 @@ model products {
 model users {
   id       Int        @id @default(autoincrement())
   email    String     @unique @db.VarChar(100)
-  password String     @db.VarChar(255) // 👈 added this line
+  password String     @db.VarChar(255) 
   name     String?    @db.VarChar(100)
   age      Int?
   role     role_enum? @default(user)
