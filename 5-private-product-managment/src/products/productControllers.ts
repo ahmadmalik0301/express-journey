@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import prisma from "../DB/DB.js";
 import { AuthenticatedRequest } from "../types/AuthenticatedRequest.js";
 import { createProductSchema, updateProductSchema } from "./productScheme.js";
@@ -10,8 +10,8 @@ export const getProducts = async (
   next: NextFunction
 ) => {
   try {
-    const page = Number(req.query.page as string) || 1;
-    const limit = Number(req.query.limit as string) || 5;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
     const skip = (page - 1) * limit;
 
     const products: ProductInterface[] = await prisma.product.findMany({

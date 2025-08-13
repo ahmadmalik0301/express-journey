@@ -8,5 +8,5 @@ const registrationScheme = Joi.object({
     country: Joi.string().max(100).optional().empty(""),
     address: Joi.string().optional().empty(""),
     password: Joi.string().required().min(8).max(255),
-});
+}).required();
 export default registrationScheme;

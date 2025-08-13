@@ -16,9 +16,10 @@ import productRouter from "./products/productRouter.js";
 
 const app = express();
 app.use(express.json());
+
 app.use("/registration", registrationRouter);
 app.use("/login", loginRouter);
-app.use("/product", authenticateJWT, productRouter);
+app.use("/products", authenticateJWT, productRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "404-Page Not found" });

@@ -84,7 +84,19 @@ components:
         message:
           type: string
           example: "Something went wrong"
-
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: ahmad@example.com
+        password:
+          type: string
+          example: mySecurePassword
+      required:
+        - email
+        - password
     ProductInput:
       type: object
       properties:
