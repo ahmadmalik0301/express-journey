@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-
-interface AuthenticatedRequest extends Request {
-  user?: any;
-}
+import { UserPayload, AuthenticatedRequest } from "../types/UserPayload.js";
 
 const authenticateJWT = (
   req: AuthenticatedRequest,
@@ -22,7 +19,7 @@ const authenticateJWT = (
       return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 
-    req.user = decoded;
+    req.user = decoded as UserPayload;
     next();
   });
 };

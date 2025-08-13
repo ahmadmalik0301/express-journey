@@ -28,7 +28,11 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       throw new Error("JWT_SECRET NOT FOUND!");
     }
     const token = jwt.sign(
-      { email: user.email, name: `${user.first_name} ${user.last_name}` },
+      {
+        id: user.id,
+        email: user.email,
+        name: `${user.first_name} ${user.last_name}`,
+      },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
