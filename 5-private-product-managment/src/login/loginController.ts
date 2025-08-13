@@ -3,14 +3,17 @@ import loginScheme from "./loginScheme.js";
 import prisma from "../DB/DB.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import LoginInterface from "../types/LoginInterface.js";
+import UserInterface from "../types/UserInterface.js";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { error, value } = loginScheme.validate(req.body);
+    const { error, value }: { error: any; value: LoginInterface } =
+      loginScheme.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
-    const { email, password } = value;
-    const user = await prisma.user.findUnique({
+    const { email, password }: LoginInterface = value;
+    const user: UserInterface | null = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -20,14 +23,14 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         message:
           "Invalid Credidential- Create New account or Recheck Credidential",
       });
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(401).json({ message: "Invalid Credidential" });
-    const JWT_SECRET = process.env.JWT_SECRET;
+    const JWT_SECRET: string | undefined = process.env.JWT_SECRET;
     if (!JWT_SECRET) {
       throw new Error("JWT_SECRET NOT FOUND!");
     }
-    const token = jwt.sign(
+    const token: string = jwt.sign(
       {
         id: user.id,
         email: user.email,
@@ -37,7 +40,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       { expiresIn: "1h" }
     );
     res.status(200).json({ token });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     next(error);
   }

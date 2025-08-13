@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../DB/DB.js";
-import { AuthenticatedRequest } from "../types/UserPayload.js";
+import { AuthenticatedRequest } from "../types/AuthenticatedRequest.js";
 import { createProductSchema, updateProductSchema } from "./productScheme.js";
+import ProductInterface from "../types/ProductInterface.js";
 
 export const getProducts = async (
   req: AuthenticatedRequest,
@@ -9,7 +10,7 @@ export const getProducts = async (
   next: NextFunction
 ) => {
   try {
-    const products = await prisma.product.findMany({
+    const products: ProductInterface[] = await prisma.product.findMany({
       where: { user_id: req.user!.id },
     });
     res.json(products);
@@ -23,11 +24,13 @@ export const getProductById = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (isNaN(id)) return res.status(400).json({ message: "Invalid product ID" });
 
   try {
-    const product = await prisma.product.findUnique({ where: { id } });
+    const product: ProductInterface | null = await prisma.product.findUnique({
+      where: { id },
+    });
     if (!product) return res.status(404).json({ message: "Product not found" });
     if (product.user_id !== req.user?.id)
       return res.status(403).json({ message: "Access denied" });
@@ -44,10 +47,19 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   try {
-    const { error, value } = createProductSchema.validate(req.body);
+    const {
+      error,
+      value,
+    }: {
+      error: any;
+      value: Omit<
+        ProductInterface,
+        "id" | "user_id" | "created_at" | "updated_at"
+      >;
+    } = createProductSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
-    const product = await prisma.product.create({
+    const product: ProductInterface = await prisma.product.create({
       data: {
         user_id: req.user!.id,
         ...value,
@@ -64,22 +76,33 @@ export const replaceProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id))
     return res.status(400).json({ message: "Invalid product ID" });
 
-  const { error, value } = createProductSchema.validate(req.body);
+  const {
+    error,
+    value,
+  }: {
+    error: any;
+    value: Omit<
+      ProductInterface,
+      "id" | "user_id" | "created_at" | "updated_at"
+    >;
+  } = createProductSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.message });
 
   try {
-    const product = await prisma.product.findUnique({ where: { id } });
+    const product: ProductInterface | null = await prisma.product.findUnique({
+      where: { id },
+    });
     if (!product) return res.status(404).json({ message: "Product not found" });
     if (product.user_id !== req.user?.id)
       return res
         .status(403)
         .json({ message: "Not authorized to update this product" });
 
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct: ProductInterface = await prisma.product.update({
       where: { id },
       data: {
         ...value,
@@ -97,22 +120,33 @@ export const updateProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id))
     return res.status(400).json({ message: "Invalid product ID" });
 
-  const { error, value } = updateProductSchema.validate(req.body);
+  const {
+    error,
+    value,
+  }: {
+    error: any;
+    value: Omit<
+      ProductInterface,
+      "id" | "user_id" | "created_at" | "updated_at"
+    >;
+  } = updateProductSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.message });
 
   try {
-    const product = await prisma.product.findUnique({ where: { id } });
+    const product: ProductInterface | null = await prisma.product.findUnique({
+      where: { id },
+    });
     if (!product) return res.status(404).json({ message: "Product not found" });
     if (product.user_id !== req.user?.id)
       return res
         .status(403)
         .json({ message: "Not authorized to update this product" });
 
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct: ProductInterface = await prisma.product.update({
       where: { id },
       data: {
         ...value,
@@ -131,11 +165,11 @@ export const deleteProduct = async (
   next: NextFunction
 ) => {
   try {
-    const productId = Number(req.params.id);
+    const productId: number = Number(req.params.id);
     if (Number.isNaN(productId))
       return res.status(400).json({ message: "Invalid product ID" });
 
-    const product = await prisma.product.findUnique({
+    const product: ProductInterface | null = await prisma.product.findUnique({
       where: { id: productId },
     });
     if (!product) return res.status(404).json({ message: "Product not found" });

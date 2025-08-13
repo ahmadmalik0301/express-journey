@@ -26,7 +26,7 @@ model User {
   first_name   String    @db.VarChar(100)
   last_name    String    @db.VarChar(100)
   age          Int?
-  phone_number String?   @db.VarChar(20)
+  phone_number String    @db.VarChar(20)
   email        String    @unique @db.VarChar(150)
   country      String?   @db.VarChar(100)
   address      String?
