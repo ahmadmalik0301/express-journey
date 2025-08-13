@@ -10,10 +10,16 @@ export const getProducts = async (
   next: NextFunction
 ) => {
   try {
+    const page = Number(req.query.page as string) || 1;
+    const limit = Number(req.query.limit as string) || 5;
+    const skip = (page - 1) * limit;
+
     const products: ProductInterface[] = await prisma.product.findMany({
       where: { user_id: req.user!.id },
+      skip,
+      take: limit,
     });
-    res.json(products);
+    res.status(200).json(products);
   } catch (err) {
     next(err);
   }
@@ -35,7 +41,7 @@ export const getProductById = async (
     if (product.user_id !== req.user?.id)
       return res.status(403).json({ message: "Access denied" });
 
-    res.json(product);
+    res.status(200).json(product);
   } catch (err) {
     next(err);
   }
