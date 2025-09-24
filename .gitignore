@@ -1,5 +1,10 @@
-node_modules
+# Ignore all node_modules folders
+node_modules/
 
+# Ignore environment files
 .env
 
+# Ignore generated Prisma files
 /generated/prisma
+
+dist/
